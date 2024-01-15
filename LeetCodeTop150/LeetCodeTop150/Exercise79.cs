@@ -5,7 +5,7 @@
 /// </summary>
 public static class Exercise79
 {
-    public static bool Exist(char[][] board, string word)
+    public static bool Exist_Slow(char[][] board, string word)
     {
         var charPoints = new List<(int, int)[]>();
 
@@ -74,6 +74,61 @@ public static class Exercise79
             }
         }
 
+        return false;
+    }
+    
+    public static bool Exist(char[][] board, string word)
+    {
+        for (int i = 0; i < board.Length; i++)
+        {
+            for (int j = 0; j < board[i].Length; j++)
+            {
+                if (board[i][j] == word[0])
+                {
+                    if (RecursivelyExists(i, j, board, word, 1))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static bool RecursivelyExists(int i, int j, char[][] board, string word, int count)
+    {
+        if (count == word.Length) return true;
+
+        var currChar = board[i][j];
+        board[i][j] = '-'; // убираем символ на время (восстановим в случае неудасного выполнения)
+        var nextChar = word[count];
+
+        //up
+        if (i > 0 && board[i - 1][j] == nextChar)
+        {
+            if (RecursivelyExists(i - 1, j, board, word, count + 1)) return true;
+        }
+
+        //down
+        if (i < board.Length - 1 && board[i + 1][j] == nextChar)
+        {
+            if (RecursivelyExists(i + 1, j, board, word, count + 1)) return true;
+        }
+
+        //left
+        if (j > 0 && board[i][j - 1] == nextChar)
+        {
+            if (RecursivelyExists(i, j - 1, board, word, count + 1)) return true;
+        }
+
+        //right
+        if (j < board[0].Length - 1 && board[i][j + 1] == nextChar)
+        {
+            if (RecursivelyExists(i, j + 1, board, word, count + 1)) return true;
+        }
+
+        board[i][j] = currChar;
         return false;
     }
 }
