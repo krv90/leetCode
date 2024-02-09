@@ -12,6 +12,8 @@ public static class Exercise637
             return new List<double>(0);
         }
         */
+        
+        // более лаконичную реализацию (без рекурсии) можно сделать с применением очереди
 
         var levelMap = new Dictionary<int, LevelSummary>();
         CalcToLevelSummary(root, levelMap, 1);
