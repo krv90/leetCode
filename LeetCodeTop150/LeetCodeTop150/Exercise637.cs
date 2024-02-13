@@ -5,7 +5,35 @@ namespace LeetCodeTop150;
 /// </summary>
 public static class Exercise637
 {
-    public static IList<double> AverageOfLevels(TreeNode root) {
+    public static IList<double> AverageOfLevels(TreeNode root)
+    {
+        var result = new List<double>();
+
+        var levels = new Queue<TreeNode>();
+        levels.Enqueue(root);
+
+        do
+        {
+            var levelCount = (double)levels.Count;
+            var levelSum = 0d;
+
+            for (int i = 0; i < levelCount; i++)
+            {
+                var current = levels.Dequeue();
+                levelSum += current.val;
+
+                if (current.left != null) levels.Enqueue(current.left);
+                if (current.right != null) levels.Enqueue(current.right);
+            }
+
+            result.Add(levelSum / levelCount);
+        } while (levels.Count > 0);
+
+        return result;
+    }
+    
+    // более лаконичную реализацию (без рекурсии) можно сделать с применением очереди
+    public static IList<double> AverageOfLevelsByDict(TreeNode root) {
         /* по условию всегда есть
         if (root == null)
         {
@@ -13,8 +41,6 @@ public static class Exercise637
         }
         */
         
-        // более лаконичную реализацию (без рекурсии) можно сделать с применением очереди
-
         var levelMap = new Dictionary<int, LevelSummary>();
         CalcToLevelSummary(root, levelMap, 1);
 
