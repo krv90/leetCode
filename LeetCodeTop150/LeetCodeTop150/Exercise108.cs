@@ -1,4 +1,6 @@
-﻿namespace LeetCodeTop150;
+﻿using System.Runtime.InteropServices.ComTypes;
+
+namespace LeetCodeTop150;
 
 /// <summary>
 /// 108. Convert Sorted Array to Binary Search Tree
@@ -10,10 +12,29 @@ public class Exercise108
 {
     public static TreeNode SortedArrayToBST(params int[] nums)
     {
-        return GetMiddle(nums);
+        return GetMiddle(nums, 0, nums.Length - 1);
     }
 
-    private static TreeNode GetMiddle(int[] nums)
+    private static TreeNode GetMiddle(int[] nums, int left, int right)
+    {
+        var len = right - left + 1;
+        switch (len)
+        {
+            case 0: return null;
+            case 1: return new TreeNode(nums[right]);
+            default:
+            {
+                var middleIndex = left + len / 2;
+                var treeNode = new TreeNode(nums[middleIndex]);
+                treeNode.left = GetMiddle(nums, left, middleIndex - 1);
+                treeNode.right = GetMiddle(nums, middleIndex + 1, right);
+
+                return treeNode;
+            }
+        }
+    }
+    
+    private static TreeNode GetMiddleV1(int[] nums)
     {
         if (nums.Length == 0)
         {
@@ -28,8 +49,8 @@ public class Exercise108
         var middleIndex = nums.Length / 2;
         var treeNode = new TreeNode(nums[middleIndex])
         {
-            left = GetMiddle(nums.Skip(0).Take(middleIndex).ToArray()),
-            right = GetMiddle(nums.Skip(middleIndex + 1).Take(middleIndex).ToArray())
+            left = GetMiddleV1(nums.Skip(0).Take(middleIndex).ToArray()),
+            right = GetMiddleV1(nums.Skip(middleIndex + 1).Take(middleIndex).ToArray())
         };
 
         return treeNode;
